@@ -1,15 +1,10 @@
 try:
-    from pycuda.compiler import SourceModule
-    from pycuda import gpuarray, driver as drv, tools
-    import atexit      
-    from blond.utils.bmath import gpu_num
-    prev_device_number = gpu_num
-    drv.init()
-    dev = drv.Device(gpu_num)
+    from pycuda import driver as drv
+    import pycuda.autoinit
 except:
-    pass
+    
 from joblib import dump,load
-from time import time
+from time import time,sleep
 import matplotlib.pyplot as plt
 
 
@@ -254,4 +249,17 @@ def use_new():
     time_decorator = time_decorator_new
     region_timer = region_timer_new
 
+enable()
 
+@time_decorator("foo","cpu")
+def foo():
+    sleep(1)
+
+def goo():
+    sleep(2)
+
+with region_timer("foo and goo") as rtn:
+    foo()
+    goo()
+
+report()
